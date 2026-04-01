@@ -4,6 +4,8 @@ import LogIn from '@/components/LogIn.vue'
 import TaskList from "@/components/TaskList.vue"
 import Register from "@/components/Register.vue";
 import NewTask from "@/components/NewTask.vue";
+import EmployeeOverview from "@/components/EmployeeOverview.vue";
+import NewEmployee from "@/components/NewEmployee.vue";
 
 const routes = [
   {
@@ -25,7 +27,17 @@ const routes = [
     path: '/taskcreation',
     name: 'taskcreation',
     component: NewTask,
-  }
+  },
+  {
+    path: '/employeeoverview',
+    name: 'employeeoverview',
+    component: EmployeeOverview,
+  },
+  {
+    path: '/newemployee',
+    name: 'newemployee',
+    component: NewEmployee,
+  },
 ]
 
 const router = createRouter({

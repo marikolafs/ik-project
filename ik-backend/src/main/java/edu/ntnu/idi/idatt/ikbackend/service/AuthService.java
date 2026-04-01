@@ -43,4 +43,17 @@ public class AuthService {
     employeeRepository.save(employee);
     return employee;
   }
+
+  public Employee newEmployee(String firstName, String lastName, String email, String position, boolean admin, String password, Organization organization) {
+    Employee employee = new Employee();
+    employee.setFirstName(firstName);
+    employee.setLastName(lastName);
+    employee.setEmail(email);
+    employee.setPosition(position);
+    employee.setAdmin(admin);
+    employee.setPassword(passwordEncoder.encode(password));
+    employee.setOrganization(organization);
+    employeeRepository.save(employee);
+    return employee;
+  }
 }
