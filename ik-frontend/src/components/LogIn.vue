@@ -12,7 +12,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { login } from "@/api/auth"
 import { useRouter } from "vue-router"
 import { useAuthStore } from "@/stores/authStore";
 

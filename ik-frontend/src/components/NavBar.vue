@@ -3,6 +3,7 @@
     <h1>IK-mat app</h1>
     <nav>
       <router-link to="/tasklist">Task List</router-link>
+      <router-link to="/employeeoverview">Employees</router-link>
       <button @click="logout">Log out</button>
     </nav>
   </header>
