@@ -74,6 +74,10 @@ public class AuthController {
       String email = jwtUtil.extractEmail(token.substring(7));
       Employee currentUser = employeeRepository.findByEmail(email).orElseThrow();
 
+      if (!currentUser.isAdmin()) {
+        return ResponseEntity.status(403).body("You are not allowed to perform this operation");
+      }
+
       Employee employee = authService.newEmployee(
           employeeDto.getFirstName(),
           employeeDto.getLastName(),
@@ -94,6 +98,10 @@ public class AuthController {
 
     String email = jwtUtil.extractEmail(token.substring(7));
     Employee currentUser = employeeRepository.findByEmail(email).orElseThrow();
+
+    if (!currentUser.isAdmin()) {
+      return ResponseEntity.status(403).body("You do not have permission to access this resource");
+    }
 
     return ResponseEntity.ok(employeeRepository.findByOrganization(currentUser.getOrganization()));
   }

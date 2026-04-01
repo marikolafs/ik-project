@@ -26,6 +26,15 @@ export const useAuthStore = defineStore('auth', {
       this.user = res.data.user;
       sessionStorage.setItem('token', this.token);
       sessionStorage.setItem('user', JSON.stringify(this.user));
+    },
+    initialize() {
+      const token = sessionStorage.getItem('token');
+      const user = sessionStorage.getItem('user');
+
+      if (token && user) {
+        this.token = token;
+        this.user = JSON.parse(user);
+      }
     }
   }
 });

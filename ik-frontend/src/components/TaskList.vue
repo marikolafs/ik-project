@@ -8,7 +8,7 @@
       </label>
     </li>
   </ul>
-  <button @click="goToTaskCreation">New Task</button>
+  <button v-if="auth.user?.admin" @click="goToTaskCreation">New Task</button>
 </template>
 
 <script setup lang="ts">
@@ -16,10 +16,13 @@
 import { useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
 import { Task, getTasks, updateTask } from "@/api/task";
+import { useAuthStore } from "@/stores/authStore";
 
 const router = useRouter();
 const tasks = ref<Task[]>([]);
 const error = ref<string | null>(null);
+
+const auth = useAuthStore();
 
 function goToTaskCreation() {
   router.push("/taskcreation");

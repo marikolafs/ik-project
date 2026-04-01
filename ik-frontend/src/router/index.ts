@@ -6,6 +6,7 @@ import Register from "@/components/Register.vue";
 import NewTask from "@/components/NewTask.vue";
 import EmployeeOverview from "@/components/EmployeeOverview.vue";
 import NewEmployee from "@/components/NewEmployee.vue";
+import {useAuthStore} from "@/stores/authStore";
 
 const routes = [
   {
@@ -32,6 +33,7 @@ const routes = [
     path: '/employeeoverview',
     name: 'employeeoverview',
     component: EmployeeOverview,
+    meta: { requiresAdmin: true }
   },
   {
     path: '/newemployee',
@@ -44,5 +46,16 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+
+router.beforeEach((to, from) => {
+  const auth = useAuthStore();
+
+  if (to.meta.requiresAdmin && !auth.user?.admin) {
+    return '/tasklist';
+  }
+  if (to.meta.requiresAuth && !auth.user) {
+    return '/login';
+  }
+});
 
 export default router
