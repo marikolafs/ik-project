@@ -5,9 +5,7 @@ import edu.ntnu.idi.idatt.ikbackend.model.Organization;
 import edu.ntnu.idi.idatt.ikbackend.model.Task;
 import edu.ntnu.idi.idatt.ikbackend.repository.EmployeeRepository;
 import edu.ntnu.idi.idatt.ikbackend.repository.TaskRepository;
-import edu.ntnu.idi.idatt.ikbackend.service.AuthService;
 import edu.ntnu.idi.idatt.ikbackend.service.TaskService;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -23,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * REST controller for tasks. Controls services related to managing tasks.
+ */
 @RestController
 @RequestMapping("/api/tasks")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -32,12 +33,21 @@ public class TaskController {
   private TaskService taskService;
   private final EmployeeRepository employeeRepository;
 
-  public TaskController(TaskService taskService, TaskRepository taskRepository,  EmployeeRepository employeeRepository) {
+  public TaskController(TaskService taskService, TaskRepository taskRepository,
+      EmployeeRepository employeeRepository) {
     this.taskService = taskService;
     this.taskRepository = taskRepository;
     this.employeeRepository = employeeRepository;
   }
 
+  /**
+   * POST method for creating tasks. Takes in information about a task and adds it to the database,
+   * with a reference to the logged in users organization.
+   *
+   * @param request, information pertaining to the task.
+   * @param auth,    authentication for the logged-in user.
+   * @return HTTP response with status code and the created task.
+   */
   @PostMapping
   public ResponseEntity<?> createTask(@RequestBody Task request, Authentication auth) {
 
@@ -51,6 +61,13 @@ public class TaskController {
     return ResponseEntity.ok(task);
   }
 
+  /**
+   * GET method for retrieving tasks. Retrieves all tasks containing a reference to the logged in
+   * users organization.
+   *
+   * @param auth, authorization for the logged-in user.
+   * @return HTTP response with status code and the retrieved tasks.
+   */
   @GetMapping
   public ResponseEntity<?> getTasks(Authentication auth) {
     String email = auth.getName();
@@ -63,8 +80,17 @@ public class TaskController {
     return ResponseEntity.ok(tasks);
   }
 
+  /**
+   * PUT method for updating tasks. Allows tasks to be set as completed or not completed.
+   *
+   * @param id,      id for the task that should be updated.
+   * @param request, information pertaining to the request.
+   * @param auth,    authorization for the logged-in user.
+   * @return HTTP response with status code and the updated task.
+   */
   @PutMapping("/{id}")
-  public ResponseEntity<?> updateTask(@PathVariable("id") Long id, @RequestBody Task request, Authentication auth) {
+  public ResponseEntity<?> updateTask(@PathVariable("id") Long id, @RequestBody Task request,
+      Authentication auth) {
 
     String email = auth.getName();
     Employee employee = employeeRepository.findByEmail(email)
