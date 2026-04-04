@@ -30,7 +30,7 @@ public class Task {
   private Boolean completed;
 
   /**
-   * Sets the "org_id" attribute as a foreign key such that many employees can belong to one
+   * Sets the "org_id" attribute as a foreign key such that many tasks can belong to one
    * organization.
    */
   @ManyToOne

@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for temperature logging. Controls services related to managing storage units and
+ * logging their temperatures.
+ */
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -32,7 +36,8 @@ public class TempLogController {
   private final JwtUtil jwtUtil;
 
   public TempLogController(StorageUnitRepository storageUnitRepository,
-      TempLogRepository tempLogRepository, EmployeeRepository employeeRepository, TempLogService tempLogService, JwtUtil jwtUtil) {
+      TempLogRepository tempLogRepository, EmployeeRepository employeeRepository,
+      TempLogService tempLogService, JwtUtil jwtUtil) {
     this.storageUnitRepository = storageUnitRepository;
     this.tempLogRepository = tempLogRepository;
     this.jwtUtil = jwtUtil;
@@ -40,13 +45,27 @@ public class TempLogController {
     this.tempLogService = tempLogService;
   }
 
+  /**
+   * Retrieves the current user.
+   *
+   * @param token the token attached to the request.
+   * @return the currently logged in employee.
+   */
   private Employee getCurrentUser(String token) {
     String email = jwtUtil.extractEmail(token.substring(7));
     return employeeRepository.findByEmail(email).orElseThrow();
   }
 
+  /**
+   * POST method for creating storage units.
+   *
+   * @param unitDto information pertaining to the request.
+   * @param token   the token attached to the request.
+   * @return HTTP response with status code and the created unit.
+   */
   @PostMapping("/unit")
-  public ResponseEntity<?> createTask(@RequestBody StorageUnitDto unitDto, @RequestHeader("Authorization") String token) {
+  public ResponseEntity<?> createUnit(@RequestBody StorageUnitDto unitDto,
+      @RequestHeader("Authorization") String token) {
 
     Employee currentUser = getCurrentUser(token);
 
@@ -60,16 +79,31 @@ public class TempLogController {
     return ResponseEntity.ok(unit);
   }
 
+  /**
+   * GET method for retrieving all storage units belonging to the current users organization.
+   *
+   * @param token the token attached to the request.
+   * @return HTTP response with status code and a list of units.
+   */
   @GetMapping("/unit")
   public ResponseEntity<?> getAllUnits(@RequestHeader("Authorization") String token) {
 
     Employee currentUser = getCurrentUser(token);
 
-    return ResponseEntity.ok(storageUnitRepository.findByOrganizationId(currentUser.getOrganization().getId()));
+    return ResponseEntity.ok(
+        storageUnitRepository.findByOrganizationId(currentUser.getOrganization().getId()));
   }
 
+  /**
+   * POST method for logging temperatures of storage units.
+   *
+   * @param tempDto information pertaining to the request.
+   * @param token   the token attached to the request.
+   * @return HTTP response with status code and the logged temperature.
+   */
   @PostMapping("/temperature-logs")
-  public ResponseEntity<?> logTemperature(@RequestBody TemperatureDto tempDto, @RequestHeader("Authorization") String token) {
+  public ResponseEntity<?> logTemperature(@RequestBody TemperatureDto tempDto,
+      @RequestHeader("Authorization") String token) {
 
     Employee currentUser = getCurrentUser(token);
 
@@ -82,8 +116,16 @@ public class TempLogController {
     return ResponseEntity.ok(tempLogService.logTemperature(tempDto.getTemperature(), unit));
   }
 
+  /**
+   * GET method for retrieving all temperatures from the last 30 days belonging to a storage unit.
+   *
+   * @param unitId the id of the unit the logs belong to.
+   * @param token  the token attached to the request.
+   * @return HTTP response with status code and a list of logs.
+   */
   @GetMapping("/temperature-logs/{unitId}")
-  public ResponseEntity<?> getLogs(@PathVariable("unitId") Long unitId, @RequestHeader("Authorization") String token) {
+  public ResponseEntity<?> getLogs(@PathVariable("unitId") Long unitId,
+      @RequestHeader("Authorization") String token) {
 
     Employee currentUser = getCurrentUser(token);
 
