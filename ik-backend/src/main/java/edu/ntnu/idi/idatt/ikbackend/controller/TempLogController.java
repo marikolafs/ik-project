@@ -3,18 +3,14 @@ package edu.ntnu.idi.idatt.ikbackend.controller;
 import edu.ntnu.idi.idatt.ikbackend.dto.StorageUnitDto;
 import edu.ntnu.idi.idatt.ikbackend.dto.TemperatureDto;
 import edu.ntnu.idi.idatt.ikbackend.model.Employee;
-import edu.ntnu.idi.idatt.ikbackend.model.Organization;
 import edu.ntnu.idi.idatt.ikbackend.model.StorageUnit;
-import edu.ntnu.idi.idatt.ikbackend.model.Task;
 import edu.ntnu.idi.idatt.ikbackend.repository.EmployeeRepository;
 import edu.ntnu.idi.idatt.ikbackend.repository.StorageUnitRepository;
 import edu.ntnu.idi.idatt.ikbackend.repository.TempLogRepository;
 import edu.ntnu.idi.idatt.ikbackend.security.JwtUtil;
 import edu.ntnu.idi.idatt.ikbackend.service.TempLogService;
 import java.time.LocalDate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api")
@@ -37,10 +32,12 @@ public class TempLogController {
   private final JwtUtil jwtUtil;
 
   public TempLogController(StorageUnitRepository storageUnitRepository,
-      TempLogRepository tempLogRepository, JwtUtil jwtUtil) {
+      TempLogRepository tempLogRepository, EmployeeRepository employeeRepository, TempLogService tempLogService, JwtUtil jwtUtil) {
     this.storageUnitRepository = storageUnitRepository;
     this.tempLogRepository = tempLogRepository;
     this.jwtUtil = jwtUtil;
+    this.employeeRepository = employeeRepository;
+    this.tempLogService = tempLogService;
   }
 
   private Employee getCurrentUser(String token) {

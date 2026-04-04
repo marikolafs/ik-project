@@ -7,6 +7,8 @@ import NewTask from "@/components/NewTask.vue";
 import EmployeeOverview from "@/components/EmployeeOverview.vue";
 import NewEmployee from "@/components/NewEmployee.vue";
 import {useAuthStore} from "@/stores/authStore";
+import UnitOverview from "@/components/UnitOverview.vue";
+import Temps from '@/components/Temps.vue';
 
 const routes = [
   {
@@ -40,6 +42,16 @@ const routes = [
     name: 'newemployee',
     component: NewEmployee,
   },
+  {
+    path: '/unit',
+    name: 'unit',
+    component: UnitOverview,
+  },
+  {
+    path: '/temperature/:id',
+    name: 'temperature',
+    component: Temps,
+  }
 ]
 
 const router = createRouter({

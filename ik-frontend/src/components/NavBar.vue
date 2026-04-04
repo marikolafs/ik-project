@@ -4,6 +4,7 @@
     <nav>
       <router-link to="/tasklist">Task List</router-link>
       <router-link v-if="auth.user?.admin" to="/employeeoverview">Employees</router-link>
+      <router-link to="/unit">Temperatures</router-link>
       <button @click="logout">Log out</button>
     </nav>
   </header>
